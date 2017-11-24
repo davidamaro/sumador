@@ -9,14 +9,15 @@ mutable struct partida
     ultimoJugador::String
 end
 
-part = partida(Dict{String, jugador}(), 0, :xxxx)
+part = partida(Dict{String, jugador}(), 0, "donNadie")
+listaOrdenes = ["añadir", "corregir"]
 
 function iniciarPartida()
     #numJug = 2
     #anadirJugador(:dav, part)
     #anadirJugador(:emm, part)
     leerJugadores()
-    println("anadir [jugador] [puntuacion]")
+    println("añadir [jugador] [puntuacion]")
     respuesta = readline()
     while (respuesta != "final")
         comando, jugador, puntu = split(respuesta)
@@ -37,17 +38,17 @@ function mostrarPuntuacion()
     end
 end
 
-function anadir(nombre::String, puntos::Int)
+function añadir(nombre::String, puntos::Int)
     part.jugadores[nombre].puntuacion += puntos
     part.ultimaPuntuacion = puntos
     part.ultimoJugador = nombre
 end
 
-function corregirPuntuacion()
-    if (part.ultimoJugador == :xxxx)
+function corregir()
+    if (part.ultimoJugador == "donNadie")
         return
     end
-    anadir(part.ultimoJugador, -part.ultimaPuntuacion)
+    añadir(part.ultimoJugador, -part.ultimaPuntuacion)
     part.ultimaPuntuacion = 0
     part.ultimoJugador = "donNadie"
     mostrarPuntuacion()
