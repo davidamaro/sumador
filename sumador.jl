@@ -23,6 +23,8 @@ function menu(comandoLlano::String)
             separado = split(comandoLlano)
         end
     end
+    write(bufferArchivo, comandoLlano)
+    write(bufferArchivo, "\n")
     if separado[1] == "añadir"
         return Expr(:call, parse(separado[1]), convert(String,separado[2]), parse(Int, separado[3]))
     elseif separado[1] == "corregir"
@@ -44,6 +46,7 @@ function iniciarPartida()
         respuesta = readline()
     end
     mostrarPuntuacion()
+    close(bufferArchivo)
 end
 
 function anadirJugador(nombre::String, parti::partida)
@@ -83,4 +86,6 @@ function leerJugadores()
     end
 end
 
+nombreArchivo = "partida.txt"
+bufferArchivo = open(nombreArchivo, "a")
 iniciarPartida()
