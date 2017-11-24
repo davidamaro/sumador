@@ -12,17 +12,33 @@ end
 part = partida(Dict{String, jugador}(), 0, "donNadie")
 listaOrdenes = ["añadir", "corregir"]
 
+function menu(comandoLlano::String)
+    separado = split(comandoLlano)
+    if !(separado[1] in listaOrdenes)
+        while !(separado[1] in listaOrdenes)
+            println("Lo siento, comando equivocado")
+            println("añadir [jugador] [puntuacion]")
+            println("corregir")
+            comandoLlano = readline()
+            separado = split(comandoLlano)
+        end
+    end
+    if separado[1] == "añadir"
+        return Expr(:call, parse(separado[1]), convert(String,separado[2]), parse(Int, separado[3]))
+    else
+        return Expr(:call, parse(separado[1]))
+    end
+end
+
 function iniciarPartida()
-    #numJug = 2
-    #anadirJugador(:dav, part)
-    #anadirJugador(:emm, part)
     leerJugadores()
     println("añadir [jugador] [puntuacion]")
+    println("corregir")
     respuesta = readline()
     while (respuesta != "final")
-        comando, jugador, puntu = split(respuesta)
-        ejecucion = Expr(:call, parse(comando), convert(String,jugador), parse(Int, puntu))
-        eval(ejecucion)
+        eval(menu(respuesta))
+        println("añadir [jugador] [puntuacion]")
+        println("corregir")
         respuesta = readline()
     end
     mostrarPuntuacion()
