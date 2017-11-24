@@ -1,33 +1,43 @@
 mutable struct jugador
-    nombre::Symbol
+    nombre::String
     puntuacion::Int
 end
 
 mutable struct partida
     jugadores::Dict
     ultimaPuntuacion::Int
-    ultimoJugador::Symbol
+    ultimoJugador::String
 end
 
-part = partida(Dict{Symbol, jugador}(), 0, :xxxx)
+part = partida(Dict{String, jugador}(), 0, :xxxx)
 
 function iniciarPartida()
-    numJug = 2
-    anadirJugador(:dav, part)
-    anadirJugador(:emm, part)
+    #numJug = 2
+    #anadirJugador(:dav, part)
+    #anadirJugador(:emm, part)
+    leerJugadores()
+    println("anadir [jugador] [puntuacion]")
+    respuesta = readline()
+    while (respuesta != "final")
+        comando, jugador, puntu = split(respuesta)
+        ejecucion = Expr(:call, parse(comando), convert(String,jugador), parse(Int, puntu))
+        eval(ejecucion)
+        respuesta = readline()
+    end
+    mostrarPuntuacion()
 end
 
-function anadirJugador(nombre::Symbol, parti::partida)
+function anadirJugador(nombre::String, parti::partida)
     parti.jugadores[nombre] = jugador(nombre, 0)
 end
 
 function mostrarPuntuacion()
     for nombre in keys(part.jugadores)
-        println(nombre, "->", part.jugadores[nombre].puntuacion)
+        println(nombre, " -> ", part.jugadores[nombre].puntuacion)
     end
 end
 
-function anadirPuntuacion(nombre::Symbol, puntos::Int)
+function anadir(nombre::String, puntos::Int)
     part.jugadores[nombre].puntuacion += puntos
     part.ultimaPuntuacion = puntos
     part.ultimoJugador = nombre
@@ -37,8 +47,21 @@ function corregirPuntuacion()
     if (part.ultimoJugador == :xxxx)
         return
     end
-    anadirPuntuacion(part.ultimoJugador, -part.ultimaPuntuacion)
+    anadir(part.ultimoJugador, -part.ultimaPuntuacion)
     part.ultimaPuntuacion = 0
-    part.ultimoJugador = :xxxx
+    part.ultimoJugador = "donNadie"
     mostrarPuntuacion()
 end
+
+function leerJugadores()
+    println("número de jugadores: ")
+    numeroDeJugadores = parse(Int,readline())
+
+    for i in 1:numeroDeJugadores
+        println("jugador: ")
+        jugador = readline()
+        anadirJugador(jugador, part)
+    end
+end
+
+iniciarPartida()
