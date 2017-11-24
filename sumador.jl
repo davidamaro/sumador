@@ -10,7 +10,7 @@ mutable struct partida
 end
 
 part = partida(Dict{String, jugador}(), 0, "donNadie")
-listaOrdenes = ["añadir", "corregir"]
+listaOrdenes = ["añadir", "corregir", "final"]
 
 function menu(comandoLlano::String)
     separado = split(comandoLlano)
@@ -25,8 +25,10 @@ function menu(comandoLlano::String)
     end
     if separado[1] == "añadir"
         return Expr(:call, parse(separado[1]), convert(String,separado[2]), parse(Int, separado[3]))
-    else
+    elseif separado[1] == "corregir"
         return Expr(:call, parse(separado[1]))
+    else
+        return Expr(:call, :continue)
     end
 end
 
